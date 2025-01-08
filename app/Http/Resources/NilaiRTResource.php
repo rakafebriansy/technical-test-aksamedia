@@ -16,15 +16,15 @@ class NilaiRTResource extends JsonResource
     {
         return [
             'nama' => $this->nama,
-            'nisn' => $this->nisn,
-            'nilai' => [
+            'nilaiRt' => [
                 "realistic" => $this->realistic,
                 "investigative" => $this->investigative,
                 "artistic" => $this->artistic,
                 "social" => $this->social,
                 "enterprising" => $this->enterprising,
                 "conventional" => $this->conventional,
-            ]
+            ],
+            'nisn' => $this->nisn,
         ];
     }
 }
