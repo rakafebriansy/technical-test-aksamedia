@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
@@ -17,27 +19,24 @@ class AuthController extends Controller
                 'username' => 'required',
                 'password' => 'required'
             ]);
-    
-            if(Auth::attempt($validated)) {
-                $user = Auth::user();
-    
-                $token = $user->createToken('API Token')->plainTextToken;
-    
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'Berhasil mendapatkan data admin.',
-                    'data' => [
-                        'token' => $token,
-                        'admin' => $user,
-                    ]
-                ],200);
+
+            $user = User::where('username', $validated['username'])->first();
+
+            if (!$user || !Hash::check($validated['password'], $user->password)) {
+                return response()->json(['error' => 'Kredensial Salah'], 401);
             }
-    
+
+            $token = $user->createToken('Technical Test Aksamedia')->plainTextToken;
+
             return response()->json([
-                'status'=> 'error',
-                'message'=> 'Data admin tidak ditemukan.',
-                'data'=> []
-            ]);
+                'status' => 'success',
+                'message' => 'Berhasil mendapatkan data admin.',
+                'data' => [
+                    'token' => $token,
+                    'admin' => $user,
+                ]
+            ],200);
+
         } catch (ValidationException $error) {
             return response()->json([
                 'status' => 'error',
