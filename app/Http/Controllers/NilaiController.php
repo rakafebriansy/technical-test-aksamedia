@@ -46,6 +46,7 @@ class NilaiController extends Controller
             ) as total
         ")
         ->groupBy('nama', 'nisn')
+        ->orderBy('total','DESC')
         ->get();
         
         return NilaiSTResource::collection($nilaiSTs);
