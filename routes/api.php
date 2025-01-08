@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\DivisionController;
 use App\Http\Controllers\Api\EmployeeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -12,5 +13,6 @@ Route::get('/user', function (Request $request) {
 
 Route::post('/login', [AuthController::class,'login']);
 Route::group(['middleware' => 'auth:sanctum'],function() {
-    Route::get('/divisions', [EmployeeController::class,'index']);
+    Route::get('/divisions', [DivisionController::class,'index']);
+    Route::get('/employees', [EmployeeController::class,'index']);
 });

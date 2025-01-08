@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Division;
+use App\Models\Employee;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -12,28 +13,32 @@ class EmployeeController extends Controller
     public function index(Request $request): JsonResponse
     {
         try {
-            $divisionsQuery = Division::query();
+            $employeesQuery = Employee::query();
             $per_page = $request->per_page ?? 10;
             $page = $request->page ?? 1;
     
+            if(isset($request->division_id)) {
+                $employeesQuery->where('division_id','=',$request->division_id);
+            }
+
             if(isset($request->name)) {
-                $divisionsQuery->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($request->name) . '%']);
+                $employeesQuery->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($request->name) . '%']);
             }
     
-            $divisions = $divisionsQuery->paginate(perPage: $per_page, page: $page);
+            $employees = $employeesQuery->with('division')->paginate(perPage: $per_page, page: $page);
             return response()->json([
                 "status" => "success",
-                "message" => "Berhasil mendapatkan data divisi.",
+                "message" => count($employees->items()) > 0 ? "Berhasil mendapatkan data karyawan." : "Data karyawan tidak ditemukan.",
                 "data" => [
-                    "divisions" => $divisions->items(),
+                    "employees" => $employees->items(),
                 ],
                 "pagination" => [
-                    "current_page" => $divisions->currentPage(),
-                    "last_page" => $divisions->lastPage(),
-                    "per_page" => $divisions->perPage(),
-                    "total" => $divisions->total(),
-                    "from" => $divisions->firstItem(),
-                    "to" => $divisions->lastItem(),
+                    "current_page" => $employees->currentPage(),
+                    "last_page" => $employees->lastPage(),
+                    "per_page" => $employees->perPage(),
+                    "total" => $employees->total(),
+                    "from" => $employees->firstItem(),
+                    "to" => $employees->lastItem(),
                 ],
             ], 200);
         } catch (\Exception $error) {
