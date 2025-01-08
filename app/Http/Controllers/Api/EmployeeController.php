@@ -56,18 +56,20 @@ class EmployeeController extends Controller
     {
         try {
             $validated = $request->validate([
-                'image' => 'file|mimes:png,jpg',
+                'image' => 'required',
                 'name' => 'required',
                 'phone' => 'required',
                 'division_id' => 'required',
                 'position' => 'required',
             ]);
             
-            $image = $request->file('image');
-            
-            $filename = uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->storeAs('images', $filename ,'public');
-            $validated['image'] = 'images/' . $filename;
+            // meng-handle jika request berupa multipart/form-data
+            $image = $request->file('image') ?? null;
+            if($image) {
+                $filename = uniqid() . '.' . $image->getClientOriginalExtension();
+                $image->storeAs('images', $filename ,'public');
+                $validated['image'] = 'images/' . $filename;
+            }
             
             $employee = new Employee();
             $employee->division_id = $validated['division_id'];
@@ -92,6 +94,49 @@ class EmployeeController extends Controller
                 'error' => $error->getMessage(),
             ], 500);
         }
+    }
 
+    public function update($id,Request $request): JsonResponse
+    {
+        try {
+            $validated = $request->validate([
+                'image' => 'nullable',
+                'name' => 'nullable',
+                'phone' => 'nullable',
+                'division_id' => 'nullable',
+                'position' => 'nullable',
+            ]);
+
+            // meng-handle jika request berupa multipart/form-data
+            $image = $request->file('image') ?? null;
+            if($image) {
+                $filename = uniqid() . '.' . $image->getClientOriginalExtension();
+                $image->storeAs('images', $filename ,'public');
+                $validated['image'] = 'images/' . $filename;
+            }
+
+            $updated = Employee::where('id','=',$id)->update($validated);
+
+            if(!$updated) {
+                throw new \Exception('Employee is not found.');
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Berhasil memperbarui karyawan.',
+            ], 201);
+        } catch (ValidationException $error) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Validasi gagal.',
+                'errors' => $error->errors(),
+            ], 422);
+        }  catch (\Exception $error) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Internal server error.',
+                'error' => $error->getMessage(),
+            ], 500);
+        }
     }
 }

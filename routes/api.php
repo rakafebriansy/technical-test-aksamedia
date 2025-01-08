@@ -14,6 +14,7 @@ Route::get('/user', function (Request $request) {
 Route::post('/login', [AuthController::class,'login']);
 Route::group(['middleware' => 'auth:sanctum'],function() {
     Route::get('/divisions', [DivisionController::class,'index']);
-    Route::post('/employees', [EmployeeController::class,'store']);
     Route::get('/employees', [EmployeeController::class,'index']);
+    Route::post('/employees', [EmployeeController::class,'store']);
+    Route::put('/employees/{id}', [EmployeeController::class,'update']);
 });
