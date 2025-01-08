@@ -124,7 +124,7 @@ class EmployeeController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'Berhasil memperbarui karyawan.',
-            ], 201);
+            ], 200);
         } catch (ValidationException $error) {
             return response()->json([
                 'status' => 'error',
@@ -132,6 +132,27 @@ class EmployeeController extends Controller
                 'errors' => $error->errors(),
             ], 422);
         }  catch (\Exception $error) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Internal server error.',
+                'error' => $error->getMessage(),
+            ], 500);
+        }
+    }
+    public function remove($id): JsonResponse 
+    {
+        try {
+            $removed = Employee::where('id','=',$id)->delete();
+
+            if(!$removed) {
+                throw new \Exception('Employee is not found.');
+            }            
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Berhasil menghapus karyawan.',
+            ], 200);
+        } catch(\Exception $error) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Internal server error.',
