@@ -30,7 +30,7 @@ class AuthController extends Controller
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'Berhasil mendapatkan data admin.',
+                'message' => 'Berhasil login.',
                 'data' => [
                     'token' => $token,
                     'admin' => $user,
@@ -43,6 +43,23 @@ class AuthController extends Controller
                 'message' => 'Validasi gagal.',
                 'errors' => $error->errors(),
             ], 422);
+        } catch (\Exception $error) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Internal server error.',
+                'error' => $error->getMessage(),
+            ], 500);
+        }
+    }
+    
+    public function logout(Request $request): JsonResponse
+    {
+        try {
+            $request->user()->currentAccessToken()->delete();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Berhasil logout.',
+            ],200);
         } catch (\Exception $error) {
             return response()->json([
                 'status' => 'error',
