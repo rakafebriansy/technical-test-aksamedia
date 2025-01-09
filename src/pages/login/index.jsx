@@ -25,7 +25,7 @@ const LoginPage = ({  }) => {
                 timer: 5000
             });
             setTimeout(() => {
-                navigate('/home');
+                navigate('/');
             }, 2000);
         } else {
             Swal.fire({
@@ -68,7 +68,7 @@ const LoginPage = ({  }) => {
                         <p className="mt-2 text-sm text-gray-600 dark:text-neutral-400">
                             Please enter your credentials.
                         </p>
-                        <img src="/images/login-banner.webp" className="w-[30%] rounded-sm" alt="" />
+                        <img src="/src/assets/login-banner.webp" className="w-[30%] rounded-sm" alt="" />
                     </div>
 
                     <div className="mt-5">
