@@ -22,7 +22,6 @@ const LoginPage = ({  }) => {
                 icon: "success",
                 title: "Login Berhasil",
                 text: "Selamat datang!",
-                timer: 5000
             });
             setTimeout(() => {
                 navigate('/');
@@ -31,8 +30,7 @@ const LoginPage = ({  }) => {
             Swal.fire({
                 icon: "error",
                 title: "Login Gagal",
-                text: "Username atau password salah!",
-                timer: 5000
+                text: "Username atau kata sandi salah!",
             });
         }
     };
@@ -45,15 +43,10 @@ const LoginPage = ({  }) => {
 
         if (username.length == 0) {
             newErrorBags.username.push('Username harus diisi.');
-        } else if (username.length < 8) {
-            console.log('username.length < 8')
-            newErrorBags.username.push('Username harus memiliki panjang minimal 8 karakter.');
         }
 
         if (password.length == 0) {
-            newErrorBags.password.push('Password harus diisi.');
-        } else if (password.length < 6) {
-            newErrorBags.password.push('Password harus memiliki panjang minimal 6 karakter.');
+            newErrorBags.password.push('Kata sandi harus diisi.');
         }
 
         setErrorBags(newErrorBags);
@@ -77,7 +70,7 @@ const LoginPage = ({  }) => {
                             <div>
                                 <label htmlFor="username" className="block text-sm mb-2 dark:text-white">Username</label>
                                 <div className="relative">
-                                    <input type="text" onChange={(e) => setUsername(e.target.value)} id="username" name="username" className="py-3 border shadow-sm px-4 block w-full border-gray-300 rounded-lg text-sm disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" required aria-describedby="email-error"/>
+                                    <input type="text" onChange={(e) => setUsername(e.target.value)} id="username" name="username" className="py-3 border shadow-sm px-4 block w-full border-gray-300 rounded-lg text-sm disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="Masukkan username" aria-describedby="email-error"/>
                                 </div>
                                 {errorBags.username.length > 0 && (
                                     <p className="text-xs text-red-600 mt-2" id="username-error">{errorBags.username[0]}</p>
@@ -85,11 +78,10 @@ const LoginPage = ({  }) => {
                             </div>
                             <div>
                                 <div className="flex justify-between items-center">
-                                <label htmlFor="password" className="block text-sm mb-2 dark:text-white">Password</label>
-                                {/* <a className="inline-flex items-center gap-x-1 text-sm text-blue-600 decoration-2 hover:underline focus:outline-none focus:underline font-medium dark:text-blue-500" href="../examples/html/recover-account.html">Forgot password?</a> */}
+                                    <label htmlFor="password" className="block text-sm mb-2 dark:text-white">Kata Sandi</label>
                                 </div>
                                 <div className="relative">
-                                    <input type={isHidden ? 'password' : 'text'} onChange={(e) => setPassword(e.target.value)} id="password" name="password" className="py-3 px-4 border block w-full border-gray-300 rounded-lg text-sm disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" required aria-describedby="password-error"/>
+                                    <input type={isHidden ? 'password' : 'text'} onChange={(e) => setPassword(e.target.value)} id="password" name="password" className="py-3 px-4 border block w-full border-gray-300 rounded-lg text-sm disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="Masukkan kata sandi" aria-describedby="password-error"/>
                                     {isHidden ? (
                                         <div className="absolute top-1/2 -translate-y-1/2 right-1 pe-3">
                                             <svg onClick={() => setIsHidden(!isHidden)} className="w-5 cursor-pointer" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -109,14 +101,6 @@ const LoginPage = ({  }) => {
                                     <p className="text-xs text-red-600 mt-2" id="password-error">{errorBags.password[0]}</p>
                                 )}
                             </div>
-                            {/* <div className="flex items-center">
-                                <div className="flex">
-                                <input id="remember-me" name="remember-me" type="checkbox" className="shrink-0 mt-0.5 border-gray-300 rounded text-blue-600 focus:ring-blue-500 dark:bg-neutral-800 dark:border-neutral-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"/>
-                                </div>
-                                <div className="ms-3">
-                                <label htmlFor="remember-me" className="text-sm dark:text-white">Remember me</label>
-                                </div>
-                            </div> */}
                             <button onClick={login} disabled={(errorBags.password.length > 0 || errorBags.password.length > 0)} className="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">Sign in</button>
                             </div>
                         </div>
