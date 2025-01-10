@@ -3,6 +3,11 @@ export class UserService {
         return JSON.parse(localStorage.getItem('users')) || [];
     }
 
+    static searchUsers(keyword) {
+        const users = this.getUsers();
+        return users.filter(user => user.name.includes(keyword));
+    }
+
     static storeUser(users) {
         localStorage.setItem('users', JSON.stringify(users));
     }

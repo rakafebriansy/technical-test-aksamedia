@@ -1,5 +1,4 @@
 import { Link, useNavigate } from "react-router-dom";
-import { getCookie } from "../../helper/cookie";
 import Layout from "../../components/Layout";
 import { useEffect, useState } from "react";
 import { UserService } from "../../services/userService";
@@ -7,11 +6,17 @@ import { UserService } from "../../services/userService";
 const HomePage = ({  }) => {
 
     const [users, setUsers] = useState([]);
+    const [keyword, setKeyword] = useState('');
 
     useEffect(() => {
         const userRecords = UserService.getUsers();
         setUsers(userRecords);
     },[]);
+
+    useEffect(() => {
+        const userRecords = UserService.searchUsers(keyword);
+        setUsers(userRecords);
+    },[keyword]);
 
     const remove = async (id) => {
         const attempt = await Swal.fire({
@@ -45,7 +50,7 @@ const HomePage = ({  }) => {
                                         <svg className="w-4 absolute left-3 top-1/2 stroke-gray-400 -translate-y-1/2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M11 6C13.7614 6 16 8.23858 16 11M16.6588 16.6549L21 21M19 11C19 15.4183 15.4183 19 11 19C6.58172 19 3 15.4183 3 11C3 6.58172 6.58172 3 11 3C15.4183 3 19 6.58172 19 11Z" stroke="" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                         </svg>
-                                        <input type="text" class="py-2 ps-9 pe-4 block w-full border-gray-300 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600 border" placeholder="Search"/>
+                                        <input onChange={(e) => setKeyword(e.target.value)} type="text" class="py-2 ps-9 pe-4 block w-full border-gray-300 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600 border" placeholder="Search"/>
                                     </div>
                                     <Link to={'/add-user'} class="py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-gray-500 text-white hover:bg-gray-600 focus:outline-none focus:bg-gray-600 disabled:opacity-50 disabled:pointer-events-none">
                                         + Add
