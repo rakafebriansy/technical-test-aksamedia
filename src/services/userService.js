@@ -5,7 +5,7 @@ export class UserService {
 
     static searchUsers(keyword) {
         const users = this.getUsers();
-        return users.filter(user => user.name.includes(keyword));
+        return users.filter(user => user.name.toLowerCase().includes(keyword.toLowerCase()));
     }
 
     static storeUser(users) {
@@ -25,7 +25,7 @@ export class UserService {
 
     static getUserById(id) {
         const users = this.getUsers();
-        return users.find(user => user.id.includes(id));
+        return users.find(user => user.id === id);
     }
 
     static getUserIndexById(id) {
