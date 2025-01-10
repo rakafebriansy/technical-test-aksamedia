@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { UserService } from "../../services/userService";
-import { uniqid } from "../../helper/utils";
 
-const AddUserPage = ({  }) => {
+const EditUserPage = ({  }) => {
+
+  const { id } = useParams();
+  const navigate = useNavigate();
+
   const [name, setName] = useState('');
   const [age, setAge] = useState('');
   const [address, setAddress] = useState('');
@@ -14,33 +17,46 @@ const AddUserPage = ({  }) => {
       address: [],
   });
 
-  const addUser = () => {
+  const update = () => {
     try {
         const formData = {
-            id: uniqid(),
+            id: id,
             name, 
             age, 
             address
         };
-        let users = UserService.getUsers();
-        users = [...users, formData];
-        UserService.storeUser(users);
+
+        UserService.updateUser(formData);
+        
         setName('');
         setAge('');
         setAddress('');
         Swal.fire({
             icon: "success",
-            title: "Tambah User Berhasil",
-            text: "Berhasil menambahkan user!",
+            title: "Ubah User Berhasil",
+            text: "Berhasil memperbarui user!",
         });
+        navigate('/');
     } catch (e) {
+      console.log(e)
         Swal.fire({
-            icon: "error",
-            title: "Tambah User Gagal",
-            text: "Gagal menambahkan user!",
+          icon: "error",
+          title: "Ubah User Gagal",
+          text: "Gagal memperbarui user!",
         });
     }
   }
+
+  useEffect(() => {
+    const user = UserService.getUserById(id);
+    if(user) {
+      setName(user.name);
+      setAge(user.age);
+      setAddress(user.address);
+    } else {
+      navigate('/');
+    }
+  },[]);
 
   useEffect(() => {
     const newErrorBags = {
@@ -71,10 +87,10 @@ const AddUserPage = ({  }) => {
       <div className="bg-white rounded-xl shadow p-4 sm:p-7 dark:bg-neutral-800">
         <div className="mb-8">
           <h2 className="text-xl font-bold text-gray-800 dark:text-neutral-200">
-            Tambah User
+            Ubah User
           </h2>
           <p className="text-sm text-gray-600 dark:text-neutral-400">
-            Dapat menambah user baru disini.
+            Dapat memperbarui data user disini.
           </p>
         </div>
     
@@ -124,7 +140,7 @@ const AddUserPage = ({  }) => {
             <Link to={'/'} className="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
               Kembali
             </Link>
-            <button onClick={addUser} disabled={(errorBags.name.length > 0 || errorBags.age.length > 0 || errorBags.address.length > 0)} className="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+            <button onClick={update} disabled={(errorBags.name.length > 0 || errorBags.age.length > 0 || errorBags.address.length > 0)} className="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
               Simpan
             </button>
           </div>
@@ -133,4 +149,4 @@ const AddUserPage = ({  }) => {
     </div>
   );
 }
-export default AddUserPage;
+export default EditUserPage;

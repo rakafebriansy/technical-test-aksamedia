@@ -26,7 +26,7 @@ const EditProfile = ({  }) => {
     } else {
       Swal.fire({
           icon: "error",
-          title: "Login Gagal",
+          title: "Ubah Profil Gagal",
           text: "Kata sandi salah!",
       });
     }
