@@ -11,9 +11,18 @@ const HomePage = ({  }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [usersPerPage] = useState(5);
     
+    const [currentPage, setCurrentPage] = useState(1);
+    const [usersPerPage] = useState(5);
+    
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
+        const searchParams = new URLSearchParams(location.search);
         const keyword = searchParams.get('keyword');
+        const page = searchParams.get('page');
+
+        if(page) {
+            setCurrentPage(parseInt(page));
+        }
         const page = searchParams.get('page');
 
         if(page) {
@@ -47,9 +56,27 @@ const HomePage = ({  }) => {
         navigate(path);
     }
 
+    const updateSearchParams = (page = undefined) => {
+        const searchParams = new URLSearchParams(location.search);
+
+        searchParams.set('keyword',keyword);
+        if(page) {
+            searchParams.set('page',page);
+        } else if (currentPage) {
+            searchParams.set('page',currentPage);
+        }
+
+        navigate({
+            pathname: location.pathname,
+            search: searchParams.toString(),
+        });
+        navigate(path);
+    }
+
     const search = () => {
         const userRecords = UserService.searchUsers(keyword);
         setUsers(userRecords);
+        updateSearchParams();
         updateSearchParams();
     }
 
@@ -69,6 +96,26 @@ const HomePage = ({  }) => {
             setUsers(userRecords);
         }
     }
+
+    const indexOfLastUser = currentPage * usersPerPage;
+    const indexOfFirstUser = indexOfLastUser - usersPerPage;
+    const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
+
+    const nextPage = () => {
+        if (currentPage < totalPages) {
+            setCurrentPage(currentPage + 1);
+            updateSearchParams(currentPage + 1);
+        }
+    };
+
+    const prevPage = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+            updateSearchParams(currentPage - 1);
+        }
+    };
+
+    const totalPages = Math.ceil(users.length / usersPerPage);
 
     const indexOfLastUser = currentPage * usersPerPage;
     const indexOfFirstUser = indexOfLastUser - usersPerPage;
@@ -119,14 +166,24 @@ const HomePage = ({  }) => {
                                         <th scope="col" className="px-2 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Name</th>
                                         <th scope="col" className="px-2 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Age</th>
                                         <th scope="col" className="px-2 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Address</th>
+                                        <th scope="col" className="pe-2 ps-4 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">No</th>
+                                        <th scope="col" className="px-2 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Name</th>
+                                        <th scope="col" className="px-2 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Age</th>
+                                        <th scope="col" className="px-2 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Address</th>
                                         <th scope="col" className="px-2 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-200 dark:divide-neutral-700">
                                         {currentUsers.length > 0 ? (
                                             currentUsers.map((user,i) => {
+                                        {currentUsers.length > 0 ? (
+                                            currentUsers.map((user,i) => {
                                                 return (
                                                     <tr key={i}>
+                                                        <td className="pe-2 ps-4 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">{(currentPage - 1) * 5 + i + 1}</td>
+                                                        <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">{user.name}</td>
+                                                        <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">{user.age}</td>
+                                                        <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">{user.address}</td>
                                                         <td className="pe-2 ps-4 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">{(currentPage - 1) * 5 + i + 1}</td>
                                                         <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">{user.name}</td>
                                                         <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">{user.age}</td>
