@@ -18,32 +18,31 @@ const EditUserPage = ({  }) => {
   });
 
   const update = () => {
-    try {
-        const formData = {
-            id: id,
-            name, 
-            age, 
-            address
-        };
+    const formData = {
+        id: id,
+        name, 
+        age, 
+        address
+    };
 
-        UserService.updateUser(formData);
-        
-        setName('');
-        setAge('');
-        setAddress('');
-        Swal.fire({
-            icon: "success",
-            title: "Ubah User Berhasil",
-            text: "Berhasil memperbarui user!",
-        });
-        navigate('/');
-    } catch (e) {
-      console.log(e)
-        Swal.fire({
-          icon: "error",
-          title: "Ubah User Gagal",
-          text: "Gagal memperbarui user!",
-        });
+    const updated = UserService.updateUser(formData);
+
+    if (updated) {
+      setName('');
+      setAge('');
+      setAddress('');
+      Swal.fire({
+          icon: "success",
+          title: "Ubah User Berhasil",
+          text: "Berhasil memperbarui user!",
+      });
+    } else {
+      navigate('/');
+      Swal.fire({
+        icon: "error",
+        title: "Ubah User Gagal",
+        text: "Gagal memperbarui user!",
+      });
     }
   }
 

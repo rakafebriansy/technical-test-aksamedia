@@ -27,4 +27,15 @@ export class UserService {
         const users = this.getUsers();
         return users.findIndex(user => user.id === id);
     }
+
+    static deleteUser(id) {
+        const users = this.getUsers();
+        const index = this.getUserIndexById(id);
+        if (index !== -1) {
+            users.splice(index, 1);
+            this.storeUser(users);
+            return true;
+        }
+        return false;
+    }
 }
