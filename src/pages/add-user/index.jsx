@@ -1,17 +1,20 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { UserService } from "../../services/userService";
 import { uniqid } from "../../helper/utils";
+import Layout from "../../components/Layout";
+import { DarkMode } from "../../contexts/DarkModeContext";
 
 const AddUserPage = ({  }) => {
   const [name, setName] = useState('');
   const [age, setAge] = useState('');
   const [address, setAddress] = useState('');
+  const { isDarkMode } = useContext(DarkMode);
 
   const [errorBags,setErrorBags] = useState({
-      name: [],
-      age: [],
-      address: [],
+    name: [],
+    age: [],
+    address: [],
   });
 
   const addUser = () => {
@@ -32,12 +35,20 @@ const AddUserPage = ({  }) => {
             icon: "success",
             title: "Tambah User Berhasil",
             text: "Berhasil menambahkan user!",
+            customClass: {
+              popup: isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-black',
+              button: 'bg-blue-500 text-white hover:bg-blue-700',
+            },
         });
     } catch (e) {
         Swal.fire({
             icon: "error",
             title: "Tambah User Gagal",
             text: "Gagal menambahkan user!",
+            customClass: {
+              popup: isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-black',
+              button: 'bg-blue-500 text-white hover:bg-blue-700',
+            },
         });
     }
   }
@@ -67,7 +78,8 @@ const AddUserPage = ({  }) => {
   },[name, age, address]);
 
   return (
-    <div className="max-w-4xl px-4 py-10 sm:px-6 lg:px-8 mx-auto">
+    <Layout>
+      <div className="max-w-4xl px-4 py-10 sm:px-6 lg:px-8 mx-auto">
       <div className="bg-white rounded-xl shadow p-4 sm:p-7 dark:bg-neutral-800">
         <div className="mb-8">
           <h2 className="text-xl font-bold text-gray-800 dark:text-neutral-200">
@@ -131,6 +143,7 @@ const AddUserPage = ({  }) => {
         </div>
       </div>
     </div>
+    </Layout>
   );
 }
 export default AddUserPage;

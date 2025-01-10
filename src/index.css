@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+#dark-toggle:checked ~ label div.toggle-round {
+    --tw-translate-x: 0.75rem;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+    --tw-bg-opacity: 1;
+    background-color: #4B5563;
+}
+
+#dark-toggle:checked ~ label div.toggle-bg {
+    --tw-bg-opacity: 1;
+    background-color: #FFFFFF;
+    border: 1px solid #4B5563;
+}
