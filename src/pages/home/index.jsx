@@ -99,15 +99,15 @@ const HomePage = ({  }) => {
 
     return (
         <Layout>
-            <div className="mt-8 w-full justify-center flex">
+            <div className="mt-8 justify-center flex">
                 <div className="flex flex-col">
-                    <div className="-m-1.5 overflow-x-auto">
+                    <div className="-m-1.5 overflow-x-auto md:min-w-[40rem] w-[20rem]">
                         <div className="mb-3">
                             <h1 className="font-semibold dark:text-neutral-200">User Table</h1>
                         </div>
-                        <div className="min-w-[40rem] inline-block align-middle">
+                        <div className="inline-block align-middle">
                             <div className="border rounded-lg overflow-hidden dark:border-neutral-700 dark:bg-neutral-800">
-                                <div className="w-full flex justify-between items-center p-5">
+                                <div className="w-full flex flex-col md:flex-row gap-2 md:justify-between items-start md:items-center p-5">
                                     <div className="max-w-sm relative">
                                         <svg className="w-4 absolute left-3 top-1/2 stroke-gray-400 -translate-y-1/2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M11 6C13.7614 6 16 8.23858 16 11M16.6588 16.6549L21 21M19 11C19 15.4183 15.4183 19 11 19C6.58172 19 3 15.4183 3 11C3 6.58172 6.58172 3 11 3C15.4183 3 19 6.58172 19 11Z" stroke="" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -127,6 +127,7 @@ const HomePage = ({  }) => {
                                         <th scope="col" className="px-2 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Umur</th>
                                         <th scope="col" className="px-2 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Alamat</th>
                                         <th scope="col" className="px-2 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Aksi</th>
+                                        <th scope="col" className="px-2 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-200 dark:divide-neutral-700">
@@ -137,6 +138,7 @@ const HomePage = ({  }) => {
                                                         <td className="pe-2 ps-4 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">{(currentPage - 1) * 5 + i + 1}</td>
                                                         <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">{user.name}</td>
                                                         <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">{user.age}</td>
+                                                        <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">{user.address}</td>
                                                         <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">{user.address}</td>
                                                         <td className="px-2 py-4 whitespace-nowrap text-sm font-medium">
                                                             <div className="flex gap-2">

@@ -45,7 +45,7 @@ const Layout = ({ children }) => {
     return (
         <main className="relative">
             {username && (
-                <nav className="flex fixed border-b shadow-sm py-3 px-20 w-full justify-between">
+                <nav className="flex fixed border-b shadow-sm py-3 px-10 md:px-20 w-full justify-between z-50">
                 <ul className="flex gap-4">
                     <Link to={'/'} className={`${location.pathname == '/' ? 'font-semibold' : ''} inline-flex items-center gap-x-2 text-sm whitespace-nowrap text-blue-600 hover:text-blue-70 focus:outline-none focus:text-blue-700 dark:text-blue-500 dark:focus:text-blue-400`} href="#">
                         Beranda
@@ -97,7 +97,7 @@ const Layout = ({ children }) => {
                 </div>
             </nav>
             )}
-        <div className={`${username ? 'px-10 pt-20' : ''}`}>{children}</div>
+        <div className={`${username ? 'md:px-10 pt-16 md:pt-20' : ''}`}>{children}</div>
         </main>
     );
 }
