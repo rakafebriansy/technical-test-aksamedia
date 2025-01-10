@@ -1,35 +1,39 @@
 import { Link, useNavigate } from "react-router-dom";
 import Layout from "../../components/Layout";
-import { useContext, useEffect, useState } from "react";
-import { UserService } from "../../services/userService";
-import { DarkMode } from "../../contexts/DarkModeContext";
+import { useEffect, useState } from "react";
+import { DivisionService } from "../../services/divisionService";
 
 const HomePage = ({  }) => {
 
     const navigate = useNavigate();
-    const [users, setUsers] = useState([]);
+    const [divisions, setDivisions] = useState([]);
     const [keyword, setKeyword] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
-    const [usersPerPage] = useState(5);
-    const { isDarkMode } = useContext(DarkMode);
+    const [perPage] = useState(5);
+    const [totalPages, setTotalPages] = useState(0);
+
+    const fetchingDivisions = async (name, page = 1) => {
+        const records = await DivisionService.get({name: name, page: page, perPage: perPage});
+        setDivisions(records.divisions);
+        setKeyword(name);
+        setCurrentPage(page);
+        setTotalPages(Math.ceil(records.pagination.total/records.pagination.per_page));
+        updateSearchParams(page);
+    }
     
     useEffect(() => {
-        const searchParams = new URLSearchParams(location.search);
-        const keyword = searchParams.get('keyword');
-        const page = searchParams.get('page');
-
-        if(page) {
-            setCurrentPage(parseInt(page));
+        const init = async () => {
+            const searchParams = new URLSearchParams(location.search);
+            const keywordParam = searchParams.get('keyword');
+            const pageParam = searchParams.get('page');
+            
+            if (keywordParam) {
+                fetchingDivisions(keywordParam, pageParam);
+            } else {
+                fetchingDivisions('',pageParam ?? 1);
+            }
         }
-        
-        if (keyword) {
-            const userRecords = UserService.searchUsers(keyword);
-            setKeyword(keyword);
-            setUsers(userRecords);
-        } else {
-            const userRecords = UserService.getUsers();
-            setUsers(userRecords);
-        }
+        init();
     },[]);
 
     const updateSearchParams = (page = undefined) => {
@@ -46,64 +50,54 @@ const HomePage = ({  }) => {
             pathname: location.pathname,
             search: searchParams.toString(),
         });
-        navigate(path);
     }
 
     const search = () => {
-        const userRecords = UserService.searchUsers(keyword);
-        setUsers(userRecords);
-        setCurrentPage(1);
-        updateSearchParams(1);
+        fetchingDivisions(keyword,1)
     }
 
-    const remove = async (id) => {
-        const attempt = await Swal.fire({
-            title: 'Apakah Anda yakin?',
-            text: 'Anda akan menghapus user ini!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Ya, hapus!',
-            cancelButtonText: 'Batal',
-            reverseButtons: true,
-            customClass: {
-                popup: isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-black',
-                button: 'bg-blue-500 text-white hover:bg-blue-700',
-              },
-        });
-        if(attempt.isConfirmed) {
-            UserService.removeUser(id);
-            const userRecords = UserService.getUsers();
-            setUsers(userRecords);
-        }
-    }
+    // const remove = async (id) => {
+    //     const attempt = await Swal.fire({
+    //         title: 'Apakah Anda yakin?',
+    //         text: 'Anda akan menghapus user ini!',
+    //         icon: 'warning',
+    //         showCancelButton: true,
+    //         confirmButtonText: 'Ya, hapus!',
+    //         cancelButtonText: 'Batal',
+    //         reverseButtons: true,
+    //         customClass: {
+    //             popup: isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-black',
+    //             button: 'bg-blue-500 text-white hover:bg-blue-700',
+    //           },
+    //     });
+    //     if(attempt.isConfirmed) {
+    //         UserService.removeUser(id);
+    //         const records = UserService.get({currentPage: currentPage, perPage: perPage});
+    //         setDivisions(records.divisions);
+    //     }
+    // }
 
-    const indexOfLastUser = currentPage * usersPerPage;
-    const indexOfFirstUser = indexOfLastUser - usersPerPage;
-    const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
-
-    const nextPage = () => {
+    const nextPage = async () => {
         if (currentPage < totalPages) {
-            setCurrentPage(currentPage + 1);
-            updateSearchParams(currentPage + 1);
+            const page = currentPage + 1;
+            await fetchingDivisions(keyword, page);
         }
     };
 
-    const prevPage = () => {
+    const prevPage = async () => {
         if (currentPage > 1) {
-            setCurrentPage(currentPage - 1);
-            updateSearchParams(currentPage - 1);
+            const page = currentPage - 1;
+            await fetchingDivisions(keyword, page);
         }
     };
-
-    const totalPages = Math.ceil(users.length / usersPerPage);
 
     return (
         <Layout>
             <div className="mt-8 justify-center flex">
                 <div className="flex flex-col">
-                    <div className="-m-1.5 overflow-x-auto md:min-w-[40rem] w-[20rem]">
+                    <div className="-m-1.5 overflow-x-auto md:w-fit w-[20rem]">
                         <div className="mb-3">
-                            <h1 className="font-semibold dark:text-neutral-200">User Table</h1>
+                            <h1 className="font-semibold dark:text-neutral-200">Tabel Divisi</h1>
                         </div>
                         <div className="inline-block align-middle">
                             <div className="border rounded-lg overflow-hidden dark:border-neutral-700 dark:bg-neutral-800">
@@ -115,24 +109,24 @@ const HomePage = ({  }) => {
                                         <input value={keyword} onChange={(e) => setKeyword(e.target.value)} type="text" className="py-2 ps-9 pe-16 block w-full border-gray-300 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600 border" placeholder="Cari berdasarkan nama"/>
                                         <button onClick={search} className="py-1 px-3 inline-flex items-center gap-x-2 text-xs absolute top-1/2 -translate-y-1/2 right-3 font-medium rounded-lg border dark:hover:bg-gray-800 dark:bg-gray-700 border-transparent bg-gray-500 text-white hover:bg-gray-600 focus:outline-none focus:bg-gray-600 disabled:opacity-50 disabled:pointer-events-none">Cari</button>
                                     </div>
-                                    <Link to={'/add-user'} className="py-2  px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-gray-500 dark:bg-gray-700 text-white hover:bg-gray-600 dark:hover:bg-gray-800 focus:outline-none focus:bg-gray-600 disabled:opacity-50 disabled:pointer-events-none">
+                                    {/* <Link to={'/add-user'} className="py-2  px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-gray-500 dark:bg-gray-700 text-white hover:bg-gray-600 dark:hover:bg-gray-800 focus:outline-none focus:bg-gray-600 disabled:opacity-50 disabled:pointer-events-none">
                                         + Tambah
-                                    </Link>
+                                    </Link> */}
                                 </div>
                                 <table className="min-w-full divide-y divide-gray-200 dark:divide-neutral-700 ">
                                     <thead>
                                         <tr>
                                         <th scope="col" className="pe-2 ps-4 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">No</th>
                                         <th scope="col" className="px-2 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Nama</th>
-                                        <th scope="col" className="px-2 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Umur</th>
+                                        {/* <th scope="col" className="px-2 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Umur</th>
                                         <th scope="col" className="px-2 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Alamat</th>
-                                        <th scope="col" className="px-2 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Aksi</th>
-                                        <th scope="col" className="px-2 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Aksi</th>
+                                        <th scope="col" className="px-2 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Aksi</th> */}
+                                        {/* <th scope="col" className="px-2 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Aksi</th> */}
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-200 dark:divide-neutral-700">
-                                        {currentUsers.length > 0 ? (
-                                            currentUsers.map((user,i) => {
+                                        {divisions.length > 0 ? (
+                                            divisions.map((user,i) => {
                                                 return (
                                                     <tr key={i}>
                                                         <td className="pe-2 ps-4 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">{(currentPage - 1) * 5 + i + 1}</td>
@@ -140,12 +134,12 @@ const HomePage = ({  }) => {
                                                         <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">{user.age}</td>
                                                         <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">{user.address}</td>
                                                         <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">{user.address}</td>
-                                                        <td className="px-2 py-4 whitespace-nowrap text-sm font-medium">
+                                                        {/* <td className="px-2 py-4 whitespace-nowrap text-sm font-medium">
                                                             <div className="flex gap-2">
                                                                 <Link to={`/user/${user.id}`} className="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 focus:outline-none focus:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:text-blue-400">Edit</Link>
                                                                 <button onClick={() => remove(user.id)} className="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 focus:outline-none focus:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:text-blue-400">Hapus</button>
                                                             </div>
-                                                        </td>
+                                                        </td> */}
                                                     </tr>
                                                 );
                                             })
@@ -156,8 +150,8 @@ const HomePage = ({  }) => {
                                         )}
                                     </tbody>
                                 </table>
-                                {currentUsers.length > 0 && (
-                                <div className="flex justify-between items-center p-5">
+                                {divisions.length > 0 && (
+                                <div className="flex justify-between items-center p-5 gap-5">
                                     <button onClick={prevPage} disabled={currentPage === 1} className="py-2 px-4 text-sm font-medium rounded-lg bg-gray-300 text-gray-800 hover:bg-gray-400 disabled:opacity-50">Sebelumnya</button>
                                     <span className="text-sm font-medium text-gray-700 dark:text-neutral-300">Halaman {currentPage} dari {totalPages}</span>
                                     <button onClick={nextPage} disabled={currentPage === totalPages} className="py-2 px-4 text-sm font-medium rounded-lg bg-gray-300 text-gray-800 hover:bg-gray-400 disabled:opacity-50">Selanjutnya</button>

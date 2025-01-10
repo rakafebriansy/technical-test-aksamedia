@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState } from "react";
-import { myUsername, myPassword } from "../../helper/credentials";
-import { setCookie } from "../../helper/cookie";
 import { useNavigate } from 'react-router-dom';
 import { DarkMode } from "../../contexts/DarkModeContext";
 import Layout from "../../components/Layout";
+import { AuthService } from "../../services/authService";
+import { getAuthorizationToken } from "../../helper/utils";
 
 const LoginPage = ({  }) => {
 
@@ -18,9 +18,9 @@ const LoginPage = ({  }) => {
         password: []
     });
 
-    const login = () => {
-        if(username === myUsername && password === myPassword) {
-            setCookie('authorized',username,30);
+    const login = async () => {
+        try {
+            const user = await AuthService.login(username, password);
             Swal.fire({
                 icon: "success",
                 title: "Login Berhasil",
@@ -31,7 +31,7 @@ const LoginPage = ({  }) => {
                 },
             });
             navigate('/');
-        } else {
+        } catch (error) {
             Swal.fire({
                 icon: "error",
                 title: "Login Gagal",
@@ -43,6 +43,12 @@ const LoginPage = ({  }) => {
             });
         }
     };
+
+    useEffect(() => {
+        if(getAuthorizationToken()){
+            navigate('/');
+        }
+    },[]);
 
     useEffect(() => {
         const newErrorBags = {

@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getMyFullName, myPassword, setMyFullName } from "../../helper/credentials";
 import Layout from "../../components/Layout";
 import { DarkMode } from "../../contexts/DarkModeContext";
 

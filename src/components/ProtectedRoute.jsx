@@ -1,9 +1,9 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import { getCookie } from '../helper/cookie';
+import { getAuthorizationToken } from '../helper/utils';
 
 const ProtectedRoute = () => {
-  const token = getCookie('authorized');
+  const token = getAuthorizationToken();
 
   if (!token) {
     return <Navigate to="/login" replace />;

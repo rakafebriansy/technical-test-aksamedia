@@ -2,14 +2,15 @@ import { Link, useLocation, useNavigate } from "react-router-dom"
 import { getCookie, removeCookie } from "../helper/cookie";
 import { useContext, useEffect, useRef, useState } from "react";
 import { DarkMode } from "../contexts/DarkModeContext";
+import { getUserFromCookie } from "../helper/utils";
+import { AuthService } from "../services/authService";
 
 const Layout = ({ children }) => {
     
     const location = useLocation();
     const navigate = useNavigate();
     const [visible, setVisible] = useState(false);
-    const [username, setUsername] = useState('');
-    const [fullName, setFullName] = useState('');
+    const [user, setUser] = useState({});
     const toggleRef = useRef(null);
     const { isDarkMode, setIsDarkMode } = useContext(DarkMode);
 
@@ -24,14 +25,25 @@ const Layout = ({ children }) => {
         }
     }
     
-    const logout = () => {
-        removeCookie('authorized');
-        navigate('/login');
+    const logout = async () => {
+        try {
+            await AuthService.logout();
+            navigate('/login');
+        } catch (error) {
+            Swal.fire({
+                icon: "error",
+                title: "Logout Gagal",
+                text: "Coba lagi!",
+                customClass: {
+                    popup: isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-black',
+                    button: 'bg-blue-500 text-white hover:bg-blue-700',
+                },
+            });
+        }
     }
 
     useEffect(() => {
-        setUsername(getCookie('authorized'));
-        setFullName(getCookie('fullName'));
+        setUser(getUserFromCookie());
 
         if (localStorage.getItem('theme') === 'dark') {
             setIsDarkMode(true);
@@ -44,7 +56,7 @@ const Layout = ({ children }) => {
 
     return (
         <main className="relative">
-            {username && (
+            {user && (
                 <nav className="flex fixed border-b shadow-sm py-3 px-10 md:px-20 w-full justify-between z-50">
                 <ul className="flex gap-4">
                     <Link to={'/'} className={`${location.pathname == '/' ? 'font-semibold' : ''} inline-flex items-center gap-x-2 text-sm whitespace-nowrap text-blue-600 hover:text-blue-70 focus:outline-none focus:text-blue-700 dark:text-blue-500 dark:focus:text-blue-400`} href="#">
@@ -56,8 +68,8 @@ const Layout = ({ children }) => {
                 </ul>
                 <div className="flex gap-3 items-center">
                     <div className="flex flex-col justify-start text-xs dark:text-neutral-200">
-                            <p className="font-bold">{username}</p>
-                            <p>Nama: {fullName}</p>
+                            <p className="font-bold">{user.username}</p>
+                            <p>Nama: {user.name}</p>
                     </div>
                     <div className="relative inline-flex flex-col">
                         <button onClick={() => setVisible(!visible)} className="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700" aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
@@ -97,7 +109,7 @@ const Layout = ({ children }) => {
                 </div>
             </nav>
             )}
-        <div className={`${username ? 'md:px-10 pt-16 md:pt-20' : ''}`}>{children}</div>
+        <div className={`${user ? 'md:px-10 pt-16 md:pt-20' : ''}`}>{children}</div>
         </main>
     );
 }
