@@ -1,5 +1,5 @@
 import axios from "axios";
-import { setCookie } from "../helper/cookie";
+import { removeCookie, setCookie } from "../helper/cookie";
 import { getAuthorizationToken } from "../helper/utils";
 
 export class AuthService {
@@ -9,7 +9,9 @@ export class AuthService {
                 username, 
                 password
             },{
-                'Content-Type': 'application/json',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
 
             if(response.status != 200) {
@@ -29,15 +31,17 @@ export class AuthService {
         try {
             const token = getAuthorizationToken();
             const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/logout`,null,{
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
             });
 
             if(response.status != 200) {
                 throw new Error(response.data);
             }
 
-            removeFromLocalStorage('user');
+            removeCookie('user');
     
             return;
         } catch (error) {

@@ -1,5 +1,4 @@
 import { Link, useLocation, useNavigate } from "react-router-dom"
-import { getCookie, removeCookie } from "../helper/cookie";
 import { useContext, useEffect, useRef, useState } from "react";
 import { DarkMode } from "../contexts/DarkModeContext";
 import { getUserFromCookie } from "../helper/utils";
@@ -62,9 +61,9 @@ const Layout = ({ children }) => {
                     <Link to={'/'} className={`${location.pathname == '/' ? 'font-semibold' : ''} inline-flex items-center gap-x-2 text-sm whitespace-nowrap text-blue-600 hover:text-blue-70 focus:outline-none focus:text-blue-700 dark:text-blue-500 dark:focus:text-blue-400`} href="#">
                         Beranda
                     </Link>
-                    <a className="inline-flex items-center gap-x-2 text-sm whitespace-nowrap text-blue-600 hover:text-blue-70 focus:outline-none focus:text-blue-700 opacity-50 pointer-events-none dark:text-blue-500 dark:focus:text-blue-400" href="#">
-                        Lainnya
-                    </a>
+                    <Link to={'/employee'} className={`${location.pathname == '/employee' ? 'font-semibold' : ''} inline-flex items-center gap-x-2 text-sm whitespace-nowrap text-blue-600 hover:text-blue-70 focus:outline-none focus:text-blue-700 dark:text-blue-500 dark:focus:text-blue-400`} href="#">
+                        Karyawan
+                    </Link>
                 </ul>
                 <div className="flex gap-3 items-center">
                     <div className="flex flex-col justify-start text-xs dark:text-neutral-200">
