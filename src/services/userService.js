@@ -28,7 +28,7 @@ export class UserService {
         return users.findIndex(user => user.id === id);
     }
 
-    static deleteUser(id) {
+    static removeUser(id) {
         const users = this.getUsers();
         const index = this.getUserIndexById(id);
         if (index !== -1) {

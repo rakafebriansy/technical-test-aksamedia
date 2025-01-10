@@ -13,6 +13,23 @@ const HomePage = ({  }) => {
         setUsers(userRecords);
     },[]);
 
+    const remove = async (id) => {
+        const attempt = await Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: 'Anda akan menghapus user ini!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal',
+            reverseButtons: true
+        });
+        if(attempt.isConfirmed) {
+            UserService.removeUser(id);
+            const userRecords = UserService.getUsers();
+            setUsers(userRecords);
+        }
+    }
+
     return (
         <Layout>
             <div className="mt-8 w-full justify-center flex">
@@ -56,7 +73,7 @@ const HomePage = ({  }) => {
                                                         <td class="px-2 py-4 whitespace-nowrap text-sm font-medium">
                                                             <div className="flex gap-2">
                                                                 <Link to={`/user/${user.id}`} class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 focus:outline-none focus:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:text-blue-400">Edit</Link>
-                                                                <button type="button" class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 focus:outline-none focus:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:text-blue-400">Delete</button>
+                                                                <button onClick={() => remove(user.id)} class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 focus:outline-none focus:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:text-blue-400">Delete</button>
                                                             </div>
                                                         </td>
                                                     </tr>
