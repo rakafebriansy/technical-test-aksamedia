@@ -4,13 +4,6 @@ import Layout from "../../components/Layout";
 
 const HomePage = ({  }) => {
 
-    const navigate = useNavigate();
-    const authorized = getCookie('authorized');
-
-    if(!authorized) {
-        navigate('/login');
-    }
-
     return (
         <Layout>
             <div className="mt-8 w-full justify-center flex">
@@ -29,7 +22,7 @@ const HomePage = ({  }) => {
                                         <input type="text" class="py-2 ps-9 pe-4 block w-full border-gray-300 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600 border" placeholder="Search"/>
                                     </div>
                                     <Link to={'/add-user'} class="py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-gray-500 text-white hover:bg-gray-600 focus:outline-none focus:bg-gray-600 disabled:opacity-50 disabled:pointer-events-none">
-                                        + Tambah
+                                        + Add
                                     </Link>
                                 </div>
                                 <table class="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">

@@ -21,16 +21,15 @@ const EditProfile = ({  }) => {
           title: "Ubah Profil Berhasil",
           text: "Nama lengkap anda berhasil diperbarui!",
       });
-      setTimeout(() => {
-          navigate('/');
-      }, 2000);
+      setFullName('');
+      setPassword('');
     } else {
       Swal.fire({
           icon: "error",
           title: "Login Gagal",
           text: "Kata sandi salah!",
       });
-}
+    }
   }
 
   useEffect(() => {
@@ -78,7 +77,7 @@ const EditProfile = ({  }) => {
             </div>
     
             <div className="sm:col-span-9">
-              <input onChange={(e) => setFullName(e.target.value)} id="fullName" type="text" className="py-2 px-3 pe-11 block border w-full border-gray-300 text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="Masukkan nama lengkap"/>
+              <input value={fullName} onChange={(e) => setFullName(e.target.value)} id="fullName" type="text" className="py-2 px-3 pe-11 block border w-full border-gray-300 text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="Masukkan nama lengkap"/>
               {errorBags.fullName.length > 0 && (
                 <p className="text-xs text-red-600 mt-2" id="password-error">{errorBags.fullName[0]}</p>
               )}
@@ -93,7 +92,7 @@ const EditProfile = ({  }) => {
             <div className="sm:col-span-9">
               <div className="space-y-2">
                 <div className="relative">
-                  <input type={isHidden ? 'password' : 'text'} onChange={(e) => setPassword(e.target.value)} id="password" className="py-2 px-3 pe-11 block w-full border-gray-300 border rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="Masukkan kata sandi"/>
+                  <input value={password} type={isHidden ? 'password' : 'text'} onChange={(e) => setPassword(e.target.value)} id="password" className="py-2 px-3 pe-11 block w-full border-gray-300 border rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="Masukkan kata sandi"/>
                   {isHidden ? (
                     <div className="absolute top-1/2 -translate-y-1/2 right-3">
                         <svg onClick={() => setIsHidden(!isHidden)} className="w-5 cursor-pointer" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -120,7 +119,7 @@ const EditProfile = ({  }) => {
             <Link to={'/'} className="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
               Kembali
             </Link>
-            <button onClick={changeFullName} className="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+            <button onClick={changeFullName} disabled={(errorBags.password.length > 0 || errorBags.fullName.length > 0)} className="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
               Simpan
             </button>
           </div>
