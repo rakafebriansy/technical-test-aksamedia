@@ -8,10 +8,17 @@ const HomePage = ({  }) => {
     const navigate = useNavigate();
     const [users, setUsers] = useState([]);
     const [keyword, setKeyword] = useState('');
-
+    const [currentPage, setCurrentPage] = useState(1);
+    const [usersPerPage] = useState(5);
+    
     useEffect(() => {
-        const searchParams = new URLSearchParams(location.search); // Dapatkan search params dari lokasi saat ini
+        const searchParams = new URLSearchParams(location.search);
         const keyword = searchParams.get('keyword');
+        const page = searchParams.get('page');
+
+        if(page) {
+            setCurrentPage(parseInt(page));
+        }
         
         if (keyword) {
             const userRecords = UserService.searchUsers(keyword);
@@ -23,10 +30,27 @@ const HomePage = ({  }) => {
         }
     },[]);
 
+    const updateSearchParams = (page = undefined) => {
+        const searchParams = new URLSearchParams(location.search);
+
+        searchParams.set('keyword',keyword);
+        if(page) {
+            searchParams.set('page',page);
+        } else if (currentPage) {
+            searchParams.set('page',currentPage);
+        }
+
+        navigate({
+            pathname: location.pathname,
+            search: searchParams.toString(),
+        });
+        navigate(path);
+    }
+
     const search = () => {
-        navigate(`/?keyword=${keyword}`);
         const userRecords = UserService.searchUsers(keyword);
         setUsers(userRecords);
+        updateSearchParams();
     }
 
     const remove = async (id) => {
@@ -45,6 +69,26 @@ const HomePage = ({  }) => {
             setUsers(userRecords);
         }
     }
+
+    const indexOfLastUser = currentPage * usersPerPage;
+    const indexOfFirstUser = indexOfLastUser - usersPerPage;
+    const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
+
+    const nextPage = () => {
+        if (currentPage < totalPages) {
+            setCurrentPage(currentPage + 1);
+            updateSearchParams(currentPage + 1);
+        }
+    };
+
+    const prevPage = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+            updateSearchParams(currentPage - 1);
+        }
+    };
+
+    const totalPages = Math.ceil(users.length / usersPerPage);
 
     return (
         <Layout>
@@ -71,22 +115,22 @@ const HomePage = ({  }) => {
                                 <table className="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
                                     <thead>
                                         <tr>
-                                        <th scope="col" className="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">No</th>
-                                        <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Name</th>
-                                        <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Age</th>
-                                        <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Address</th>
+                                        <th scope="col" className="pe-2 ps-4 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">No</th>
+                                        <th scope="col" className="px-2 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Name</th>
+                                        <th scope="col" className="px-2 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Age</th>
+                                        <th scope="col" className="px-2 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Address</th>
                                         <th scope="col" className="px-2 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-200 dark:divide-neutral-700">
-                                        {users.length > 0 ? (
-                                            users.map((user,i) => {
+                                        {currentUsers.length > 0 ? (
+                                            currentUsers.map((user,i) => {
                                                 return (
                                                     <tr key={i}>
-                                                        <td className="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">{i + 1}</td>
-                                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">{user.name}</td>
-                                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">{user.age}</td>
-                                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">{user.address}</td>
+                                                        <td className="pe-2 ps-4 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">{(currentPage - 1) * 5 + i + 1}</td>
+                                                        <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">{user.name}</td>
+                                                        <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">{user.age}</td>
+                                                        <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">{user.address}</td>
                                                         <td className="px-2 py-4 whitespace-nowrap text-sm font-medium">
                                                             <div className="flex gap-2">
                                                                 <Link to={`/user/${user.id}`} className="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 focus:outline-none focus:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:text-blue-400">Edit</Link>
@@ -101,9 +145,13 @@ const HomePage = ({  }) => {
                                                 <td colSpan={5} className="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200 text-center">Belum ada data.</td>
                                             </tr>
                                         )}
-
                                     </tbody>
                                 </table>
+                                <div className="flex justify-between items-center p-5">
+                                    <button onClick={prevPage} disabled={currentPage === 1} className="py-2 px-4 text-sm font-medium rounded-lg bg-gray-300 text-gray-800 hover:bg-gray-400 disabled:opacity-50">Previous</button>
+                                    <span className="text-sm font-medium text-gray-700 dark:text-neutral-300">Halaman {currentPage} of {totalPages}</span>
+                                    <button onClick={nextPage} disabled={currentPage === totalPages} className="py-2 px-4 text-sm font-medium rounded-lg bg-gray-300 text-gray-800 hover:bg-gray-400 disabled:opacity-50">Next</button>
+                                </div>
                             </div>
                         </div>
                     </div>
