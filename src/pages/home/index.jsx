@@ -149,7 +149,7 @@ const HomePage = ({  }) => {
                                 </table>
                                 <div className="flex justify-between items-center p-5">
                                     <button onClick={prevPage} disabled={currentPage === 1} className="py-2 px-4 text-sm font-medium rounded-lg bg-gray-300 text-gray-800 hover:bg-gray-400 disabled:opacity-50">Previous</button>
-                                    <span className="text-sm font-medium text-gray-700 dark:text-neutral-300">Halaman {currentPage} of {totalPages}</span>
+                                    <span className="text-sm font-medium text-gray-700 dark:text-neutral-300">Halaman {currentPage} dari {totalPages}</span>
                                     <button onClick={nextPage} disabled={currentPage === totalPages} className="py-2 px-4 text-sm font-medium rounded-lg bg-gray-300 text-gray-800 hover:bg-gray-400 disabled:opacity-50">Next</button>
                                 </div>
                             </div>
