@@ -1,10 +1,10 @@
 import axios from "axios";
 import { getAuthorizationToken } from "../helper/utils";
 
-export class DivisionService {
+export class EmployeeService {
     static async get({name, perPage, page}) {
         try {
-            let url = `${import.meta.env.VITE_BACKEND_URL}/api/divisions`;
+            let url = `${import.meta.env.VITE_BACKEND_URL}/api/employees`;
             const params = [];
             if (name && name !== 'undefined') {
                 params.push(`name=${name}`);
@@ -33,7 +33,7 @@ export class DivisionService {
             }
 
             return {
-                divisions: response.data.data.divisions,
+                employees: response.data.data.employees,
                 pagination: response.data.pagination
             };
         } catch (error) {

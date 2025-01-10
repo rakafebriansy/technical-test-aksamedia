@@ -56,27 +56,6 @@ const HomePage = ({  }) => {
         fetchingDivisions(keyword,1)
     }
 
-    // const remove = async (id) => {
-    //     const attempt = await Swal.fire({
-    //         title: 'Apakah Anda yakin?',
-    //         text: 'Anda akan menghapus user ini!',
-    //         icon: 'warning',
-    //         showCancelButton: true,
-    //         confirmButtonText: 'Ya, hapus!',
-    //         cancelButtonText: 'Batal',
-    //         reverseButtons: true,
-    //         customClass: {
-    //             popup: isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-black',
-    //             button: 'bg-blue-500 text-white hover:bg-blue-700',
-    //           },
-    //     });
-    //     if(attempt.isConfirmed) {
-    //         UserService.removeUser(id);
-    //         const records = UserService.get({currentPage: currentPage, perPage: perPage});
-    //         setDivisions(records.divisions);
-    //     }
-    // }
-
     const nextPage = async () => {
         if (currentPage < totalPages) {
             const page = currentPage + 1;
@@ -109,37 +88,24 @@ const HomePage = ({  }) => {
                                         <input value={keyword} onChange={(e) => setKeyword(e.target.value)} type="text" className="py-2 ps-9 pe-16 block w-full border-gray-300 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600 border" placeholder="Cari berdasarkan nama"/>
                                         <button onClick={search} className="py-1 px-3 inline-flex items-center gap-x-2 text-xs absolute top-1/2 -translate-y-1/2 right-3 font-medium rounded-lg border dark:hover:bg-gray-800 dark:bg-gray-700 border-transparent bg-gray-500 text-white hover:bg-gray-600 focus:outline-none focus:bg-gray-600 disabled:opacity-50 disabled:pointer-events-none">Cari</button>
                                     </div>
-                                    {/* <Link to={'/add-user'} className="py-2  px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-gray-500 dark:bg-gray-700 text-white hover:bg-gray-600 dark:hover:bg-gray-800 focus:outline-none focus:bg-gray-600 disabled:opacity-50 disabled:pointer-events-none">
-                                        + Tambah
-                                    </Link> */}
                                 </div>
                                 <table className="min-w-full divide-y divide-gray-200 dark:divide-neutral-700 ">
                                     <thead>
                                         <tr>
                                         <th scope="col" className="pe-2 ps-4 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">No</th>
                                         <th scope="col" className="px-2 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Nama</th>
-                                        {/* <th scope="col" className="px-2 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Umur</th>
-                                        <th scope="col" className="px-2 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Alamat</th>
-                                        <th scope="col" className="px-2 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Aksi</th> */}
-                                        {/* <th scope="col" className="px-2 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Aksi</th> */}
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-200 dark:divide-neutral-700">
                                         {divisions.length > 0 ? (
-                                            divisions.map((user,i) => {
+                                            divisions.map((division,i) => {
                                                 return (
                                                     <tr key={i}>
                                                         <td className="pe-2 ps-4 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">{(currentPage - 1) * 5 + i + 1}</td>
-                                                        <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">{user.name}</td>
-                                                        <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">{user.age}</td>
-                                                        <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">{user.address}</td>
-                                                        <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">{user.address}</td>
-                                                        {/* <td className="px-2 py-4 whitespace-nowrap text-sm font-medium">
-                                                            <div className="flex gap-2">
-                                                                <Link to={`/user/${user.id}`} className="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 focus:outline-none focus:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:text-blue-400">Edit</Link>
-                                                                <button onClick={() => remove(user.id)} className="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 focus:outline-none focus:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:text-blue-400">Hapus</button>
-                                                            </div>
-                                                        </td> */}
+                                                        <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">{division.name}</td>
+                                                        <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">{division.age}</td>
+                                                        <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">{division.address}</td>
+                                                        <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">{division.address}</td>
                                                     </tr>
                                                 );
                                             })
