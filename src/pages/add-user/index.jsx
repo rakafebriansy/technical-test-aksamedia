@@ -112,7 +112,7 @@ const AddUserPage = ({  }) => {
             </div>
     
             <div className="sm:col-span-9">
-              <input value={age} onChange={(e) => setAge(e.target.value)} id="age" type="number" className="py-2 px-3 block border w-full border-gray-300 text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="Masukkan nama lengkap"/>
+              <input value={age} onChange={(e) => setAge(e.target.value)} id="age" type="number" className="py-2 px-3 block border w-full border-gray-300 text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="Masukkan umur"/>
               {errorBags.age.length > 0 && (
                 <p className="text-xs text-red-600 mt-2" id="age-error">{errorBags.age[0]}</p>
               )}
@@ -125,7 +125,7 @@ const AddUserPage = ({  }) => {
             </div>
     
             <div className="sm:col-span-9">
-              <input value={address} onChange={(e) => setAddress(e.target.value)} id="address" type="text" className="py-2 px-3 block border w-full border-gray-300 text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="Masukkan nama lengkap"/>
+              <input value={address} onChange={(e) => setAddress(e.target.value)} id="address" type="text" className="py-2 px-3 block border w-full border-gray-300 text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="Masukkan alamat"/>
               {errorBags.address.length > 0 && (
                 <p className="text-xs text-red-600 mt-2" id="address-error">{errorBags.address[0]}</p>
               )}
