@@ -41,4 +41,24 @@ export class DivisionService {
             throw error;
         }
     }
+    static async all() {
+        try {
+            const token = getAuthorizationToken();
+            const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/divisions/all`,{
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if(response.status != 200) {
+                throw new Error(response.data);
+            }
+
+            return response.data.data;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
 }

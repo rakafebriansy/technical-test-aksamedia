@@ -14,10 +14,9 @@ const EmployeePage = ({  }) => {
 
     const fetchingEmployees = async (name, page = 1) => {
         const records = await EmployeeService.get({name: name, page: page, perPage: perPage});
-        console.log(records)
         setEmployees(records.employees);
         setKeyword(name);
-        setCurrentPage(page);
+        setCurrentPage(parseInt(page));
         setTotalPages(Math.ceil(records.pagination.total/records.pagination.per_page));
         updateSearchParams(page);
     }
@@ -98,7 +97,7 @@ const EmployeePage = ({  }) => {
                 <div className="flex flex-col">
                     <div className="-m-1.5 overflow-x-auto md:w-fit w-[20rem]">
                         <div className="mb-3">
-                            <h1 className="font-semibold dark:text-neutral-200">Tabel Divisi</h1>
+                            <h1 className="font-semibold dark:text-neutral-200">Tabel Karyawan</h1>
                         </div>
                         <div className="inline-block align-middle">
                             <div className="border rounded-lg overflow-hidden dark:border-neutral-700 dark:bg-neutral-800">
@@ -110,7 +109,7 @@ const EmployeePage = ({  }) => {
                                         <input value={keyword} onChange={(e) => setKeyword(e.target.value)} type="text" className="py-2 ps-9 pe-16 block w-full border-gray-300 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600 border" placeholder="Cari berdasarkan nama"/>
                                         <button onClick={search} className="py-1 px-3 inline-flex items-center gap-x-2 text-xs absolute top-1/2 -translate-y-1/2 right-3 font-medium rounded-lg border dark:hover:bg-gray-800 dark:bg-gray-700 border-transparent bg-gray-500 text-white hover:bg-gray-600 focus:outline-none focus:bg-gray-600 disabled:opacity-50 disabled:pointer-events-none">Cari</button>
                                     </div>
-                                    <Link to={'/add-user'} className="py-2  px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-gray-500 dark:bg-gray-700 text-white hover:bg-gray-600 dark:hover:bg-gray-800 focus:outline-none focus:bg-gray-600 disabled:opacity-50 disabled:pointer-events-none">
+                                    <Link to={'/add-employee'} className="py-2  px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-gray-500 dark:bg-gray-700 text-white hover:bg-gray-600 dark:hover:bg-gray-800 focus:outline-none focus:bg-gray-600 disabled:opacity-50 disabled:pointer-events-none">
                                         + Tambah
                                     </Link>
                                 </div>
@@ -137,7 +136,7 @@ const EmployeePage = ({  }) => {
                                                         <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">{employee.phone}</td>
                                                         <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">{employee.position}</td>
                                                         <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
-                                                            <img src={`${import.meta.env.VITE_BACKEND_URL}/storage/images/${employee.image}`} alt="" className="h-10 max-w-20" />
+                                                            <img src={`${import.meta.env.VITE_BACKEND_URL}/storage/${employee.image}`} alt="" className="h-10 max-w-20" />
                                                         </td>
                                                         <td className="px-2 py-4 whitespace-nowrap text-sm font-medium">
                                                             <div className="flex gap-2">

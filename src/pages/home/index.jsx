@@ -16,7 +16,7 @@ const HomePage = ({  }) => {
         const records = await DivisionService.get({name: name, page: page, perPage: perPage});
         setDivisions(records.divisions);
         setKeyword(name);
-        setCurrentPage(page);
+        setCurrentPage(parseInt(page));
         setTotalPages(Math.ceil(records.pagination.total/records.pagination.per_page));
         updateSearchParams(page);
     }

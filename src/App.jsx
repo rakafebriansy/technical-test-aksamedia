@@ -5,8 +5,8 @@ import HomePage from './pages/home/index.jsx'
 import EmployeePage from './pages/employee/index.jsx'
 import LoginPage from './pages/login/index.jsx'
 import EditProfilePage from './pages/edit-profile/index.jsx'
-import AddUserPage from './pages/add-user/index.jsx'
-import EditUserPage from './pages/edit-user/index.jsx'
+import AddEmployeePage from './pages/add-employee/index.jsx'
+import EditEmployeePage from './pages/edit-employee/index.jsx'
 
 function App() {
   return (
@@ -16,8 +16,8 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/employee" element={<EmployeePage />} />
           <Route path="/edit-profile" element={<EditProfilePage />} />
-          <Route path="/add-user" element={<AddUserPage />} />
-          <Route path='/user/:id' element={<EditUserPage />}/>
+          <Route path="/add-employee" element={<AddEmployeePage />} />
+          <Route path='/employee/:id' element={<EditEmployeePage />}/>
         </Route>
         <Route path='/login' element={<LoginPage />}/>
         {/* <Route path="*" element={<NotFoundPage/>} /> */}

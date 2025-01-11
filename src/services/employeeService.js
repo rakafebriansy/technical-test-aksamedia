@@ -41,4 +41,28 @@ export class EmployeeService {
             throw error;
         }
     }
+
+    static async store(formData) {
+        try {
+            let url = `${import.meta.env.VITE_BACKEND_URL}/api/employees`;
+
+            const token = getAuthorizationToken();
+            const response = await axios.post(url,formData,{
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            console.log(response)
+
+            if(response.status != 201) {
+                throw new Error(response.data);
+            }
+
+            return;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
 }
