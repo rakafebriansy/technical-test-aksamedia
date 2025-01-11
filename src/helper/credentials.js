@@ -1,6 +1,6 @@
 import { getCookie, setCookie } from "./cookie";
 
-export const myUsername = "rakafebriansy";
+export const myUsername = "rakaa";
 export const myPassword = "123456";
 export const getMyFullName = () => {
     return getCookie('fullName');

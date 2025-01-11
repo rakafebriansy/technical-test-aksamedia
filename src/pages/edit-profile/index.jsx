@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getMyFullName, myPassword, setMyFullName } from "../../helper/credentials";
 import Layout from "../../components/Layout";
 import { DarkMode } from "../../contexts/DarkModeContext";
@@ -10,6 +10,7 @@ const EditProfile = ({  }) => {
   const [password, setPassword] = useState('');
   const [isHidden, setIsHidden] = useState(true);
   const { isDarkMode } = useContext(DarkMode);
+  const navigate = useNavigate();
 
   const [errorBags,setErrorBags] = useState({
       fullName: [],
@@ -28,8 +29,7 @@ const EditProfile = ({  }) => {
             button: 'bg-blue-500 text-white hover:bg-blue-700',
           },
       });
-      setFullName('');
-      setPassword('');
+      navigate(-1);
     } else {
       Swal.fire({
           icon: "error",
