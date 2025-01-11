@@ -152,27 +152,27 @@ const EditEmployeePage = ({  }) => {
             </div>
     
             <div className="sm:col-span-9">
-              <input value={position} onChange={(e) => setPosition(e.target.value)} id="position" type="text" className="py-2 px-3 block border w-full border-gray-300 text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="Masukkan nama lengkap"/>
+              <input value={position} onChange={(e) => setPosition(e.target.value)} id="position" type="text" className="py-2 px-3 block border w-full border-gray-300 text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="Masukkan posisi"/>
               {errorBags.position.length > 0 && (
                 <p className="text-xs text-red-600 mt-2" id="position-error">{errorBags.position[0]}</p>
               )}
             </div>
 
             <div className="sm:col-span-3">
-              <label htmlFor="position" className="inline-block text-sm text-gray-800 mt-2.5 dark:text-neutral-200">
+              <label htmlFor="division" className="inline-block text-sm text-gray-800 mt-2.5 dark:text-neutral-200">
                 Divisi
               </label>
             </div>
     
             <div className="sm:col-span-9">
-              <select id="position" value={divisionId} onChange={(e) => setDivisionId(e.target.value)} className="py-3 px-4 pe-9 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600">
+              <select id="division" value={divisionId} onChange={(e) => setDivisionId(e.target.value)} className="py-3 px-4 pe-9 border-gray-300 border block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600">
                 <option value="">Pilih divisi</option>
                 {divisions.map((division, i) => (
                   <option key={i} value={division.id}>{division.name}</option>
                 ))}
               </select>
               {errorBags.divisionId.length > 0 && (
-                <p className="text-xs text-red-600 mt-2" id="position-error">{errorBags.divisionId[0]}</p>
+                <p className="text-xs text-red-600 mt-2" id="division-error">{errorBags.divisionId[0]}</p>
               )}
             </div>
 
