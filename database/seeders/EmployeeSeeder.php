@@ -21,7 +21,7 @@ class EmployeeSeeder extends Seeder
             Employee::create([
                 'id' => Str::uuid(),
                 'name' => fake()->name,
-                'image' => fake()->imageUrl,
+                'image' => 'images/pexels-thibault-trillet-44912-167478.webp',
                 'phone' => fake()->phoneNumber,
                 'position' => fake()->jobTitle,
                 'division_id' => $division->id

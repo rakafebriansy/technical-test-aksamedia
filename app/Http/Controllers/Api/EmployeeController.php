@@ -7,6 +7,7 @@ use App\Models\Division;
 use App\Models\Employee;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
@@ -27,7 +28,7 @@ class EmployeeController extends Controller
                 $employeesQuery->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($request->name) . '%']);
             }
     
-            $employees = $employeesQuery->with('division')->paginate(perPage: $per_page, page: $page);
+            $employees = $employeesQuery->with('division')->orderBy('updated_at','DESC')->paginate(perPage: $per_page, page: $page);
             return response()->json([
                 "status" => "success",
                 "message" => count($employees->items()) > 0 ? "Berhasil mendapatkan data karyawan." : "Data karyawan tidak ditemukan.",

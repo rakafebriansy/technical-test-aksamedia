@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Division;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class DivisionController extends Controller
 {
@@ -35,6 +36,24 @@ class DivisionController extends Controller
                     "from" => $divisions->firstItem(),
                     "to" => $divisions->lastItem(),
                 ],
+            ], 200);
+        } catch (\Exception $error) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Internal server error.',
+                'error' => $error->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function all(): JsonResponse 
+    {
+        try {
+            $divisions = Division::all();
+            return response()->json([
+                "status" => "success",
+                "message" => count($divisions) > 0 ? "Berhasil mendapatkan seluruh data divisi." : "Data divisi tidak ditemukan.",
+                "data" => $divisions
             ], 200);
         } catch (\Exception $error) {
             return response()->json([
