@@ -37,12 +37,6 @@ const EditEmployeePage = ({  }) => {
 
       await EmployeeService.update(formData, id);
 
-      setName('');
-      setPhone('');
-      setPosition('');
-      setDivisionId('');
-      setExtistingImage(null);
-
       Swal.fire({
           icon: "success",
           title: "Ubah Karyawan Berhasil",

@@ -20,7 +20,7 @@ const LoginPage = ({  }) => {
 
     const login = async () => {
         try {
-            const user = await AuthService.login(username, password);
+            await AuthService.login(username, password);
             Swal.fire({
                 icon: "success",
                 title: "Login Berhasil",

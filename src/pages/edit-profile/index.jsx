@@ -2,6 +2,8 @@ import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Layout from "../../components/Layout";
 import { DarkMode } from "../../contexts/DarkModeContext";
+import { AuthService } from "../../services/authService";
+import { getUserFromCookie } from "../../helper/utils";
 
 const EditProfile = ({  }) => {
 
@@ -15,21 +17,21 @@ const EditProfile = ({  }) => {
       password: [],
   });
 
-  const changeFullName = () => {
-    if(password === myPassword) {
-      setMyFullName(fullName);
-      Swal.fire({
-          icon: "success",
-          title: "Ubah Profil Berhasil",
-          text: "Nama lengkap anda berhasil diperbarui!",
-          customClass: {
-            popup: isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-black',
-            button: 'bg-blue-500 text-white hover:bg-blue-700',
-          },
-      });
-      setFullName('');
+  const changeFullName = async () => {
+    try {
+      await AuthService.updateFullName({name: fullName, password: password});
       setPassword('');
-    } else {
+      
+      Swal.fire({
+        icon: "success",
+        title: "Ubah Profil Berhasil",
+        text: "Nama lengkap anda berhasil diperbarui!",
+        customClass: {
+          popup: isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-black',
+          button: 'bg-blue-500 text-white hover:bg-blue-700',
+        },
+      });
+    } catch (error) {
       Swal.fire({
           icon: "error",
           title: "Ubah Profil Gagal",
@@ -43,10 +45,8 @@ const EditProfile = ({  }) => {
   }
 
   useEffect(() => {
-    const fullName = getMyFullName();
-    if(fullName) {
-      setFullName(fullName);
-    }
+    const user = getUserFromCookie();
+    setFullName(user.name);
   },[]);
 
   useEffect(() => {
