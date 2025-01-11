@@ -14,11 +14,11 @@ const EmployeePage = ({  }) => {
 
     const fetchingEmployees = async (name, page = 1) => {
         const records = await EmployeeService.get({name: name, page: page, perPage: perPage});
-        setEmployees(records.employees);
         setKeyword(name);
+        setEmployees(records.employees);
         setCurrentPage(parseInt(page));
         setTotalPages(Math.ceil(records.pagination.total/records.pagination.per_page));
-        updateSearchParams(page);
+        updateSearchParams(page,name);
     }
     
     useEffect(() => {
@@ -36,7 +36,7 @@ const EmployeePage = ({  }) => {
         init();
     },[]);
 
-    const updateSearchParams = (page = undefined) => {
+    const updateSearchParams = (page = undefined, keyword) => {
         const searchParams = new URLSearchParams(location.search);
 
         searchParams.set('keyword',keyword);
