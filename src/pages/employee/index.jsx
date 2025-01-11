@@ -1,11 +1,13 @@
 import { Link, useNavigate } from "react-router-dom";
 import Layout from "../../components/Layout";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { EmployeeService } from "../../services/employeeService";
+import { DarkMode } from "../../contexts/DarkModeContext";
 
 const EmployeePage = ({  }) => {
 
     const navigate = useNavigate();
+    const { isDarkMode } = useContext(DarkMode);
     const [employees, setEmployees] = useState([]);
     const [keyword, setKeyword] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
@@ -71,9 +73,18 @@ const EmployeePage = ({  }) => {
               },
         });
         if(attempt.isConfirmed) {
-            UserService.removeUser(id);
-            const records = UserService.get({currentPage: currentPage, perPage: perPage});
+            EmployeeService.remove(id);
+            const records = await EmployeeService.get({name: '',currentPage: currentPage, perPage: perPage});
             setEmployees(records.employees);
+            Swal.fire({
+                icon: "success",
+                title: "Ubah Profil Berhasil",
+                text: "Nama lengkap anda berhasil diperbarui!",
+                customClass: {
+                  popup: isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-black',
+                  button: 'bg-blue-500 text-white hover:bg-blue-700',
+                },
+            });
         }
     }
 

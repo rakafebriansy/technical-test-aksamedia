@@ -112,4 +112,27 @@ export class EmployeeService {
             throw error;
         }
     }
+
+    static async remove(id) {
+        try {
+            const token = getAuthorizationToken();
+            const url = `${import.meta.env.VITE_BACKEND_URL}/api/employees/${id}`;
+
+            const response = await axios.delete(url,{
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if(response.status != 200) {
+                throw new Error(response.data);
+            }
+
+            return;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
 }
