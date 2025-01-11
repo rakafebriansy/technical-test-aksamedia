@@ -1,107 +1,125 @@
 import { useContext, useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { UserService } from "../../services/userService";
+import { Link, useParams } from "react-router-dom";
 import Layout from "../../components/Layout";
 import { DarkMode } from "../../contexts/DarkModeContext";
+import { DivisionService } from "../../services/divisionService";
+import { EmployeeService } from "../../services/employeeService";
 
-const EditUserPage = ({  }) => {
+const EditEmployeePage = ({  }) => {
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [position, setPosition] = useState('');
+  const [divisionId, setDivisionId] = useState('');
+  const [extistingImage, setExtistingImage] = useState('');
+  const [image, setImage] = useState(null);
+  const [divisions, setDivisions] = useState([]);
+  const {id} = useParams();
 
-  const { id } = useParams();
-  const navigate = useNavigate();
   const { isDarkMode } = useContext(DarkMode);
 
-  const [name, setName] = useState('');
-  const [age, setAge] = useState('');
-  const [address, setAddress] = useState('');
-
   const [errorBags,setErrorBags] = useState({
-      name: [],
-      age: [],
-      address: [],
+    name: [],
+    phone: [],
+    position: [],
+    image: [],
+    divisionId: [],
   });
 
-  const update = () => {
-    const formData = {
-        id: id,
-        name, 
-        age, 
-        address
-    };
+  const addEmployee = async () => {
+    try {
+      const formData = new FormData();
+      formData.append('name',name);
+      formData.append('phone',phone);
+      formData.append('position',position);
+      formData.append('division_id',divisionId);
 
-    const updated = UserService.updateUser(formData);
+      formData.append('image',image);
 
-    if (updated) {
+      await EmployeeService.update(formData, id);
+
       setName('');
-      setAge('');
-      setAddress('');
+      setPhone('');
+      setPosition('');
+      setDivisionId('');
+      setExtistingImage(null);
+
       Swal.fire({
-        icon: "success",
-        title: "Ubah User Berhasil",
-        text: "Berhasil memperbarui user!",
-        customClass: {
-          popup: isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-black',
-          button: 'bg-blue-500 text-white hover:bg-blue-700',
-        },
+          icon: "success",
+          title: "Ubah Karyawan Berhasil",
+          text: "Berhasil memperbarui karyawan!",
+          customClass: {
+            popup: isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-black',
+            button: 'bg-blue-500 text-white hover:bg-blue-700',
+          },
       });
-      navigate('/');
-    } else {
+    } catch (e) {
       Swal.fire({
-        icon: "error",
-        title: "Ubah User Gagal",
-        text: "Gagal memperbarui user!",
-        customClass: {
-          popup: isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-black',
-          button: 'bg-blue-500 text-white hover:bg-blue-700',
-        },
+          icon: "error",
+          title: "Ubah Karyawan Gagal",
+          text: "Gagal memperbarui karyawan!",
+          customClass: {
+            popup: isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-black',
+            button: 'bg-blue-500 text-white hover:bg-blue-700',
+          },
       });
     }
   }
 
+  const fetchingDivisions = async () => {
+    const records = await DivisionService.all();
+    setDivisions(records);
+    const employee = await EmployeeService.show(id);
+    setName(employee.name);
+    setPhone(employee.phone);
+    setPosition(employee.position);
+    setExtistingImage(employee.image);
+    setDivisionId(employee.division.id);
+  }
+
   useEffect(() => {
-    const user = UserService.getUserById(id);
-    if(user) {
-      setName(user.name);
-      setAge(user.age);
-      setAddress(user.address);
-    } else {
-      navigate('/');
-    }
+    fetchingDivisions();
   },[]);
 
   useEffect(() => {
     const newErrorBags = {
-        name: [],
-        age: [],
-        address: [],
+      name: [],
+      phone: [],
+      position: [],
+      image: [],
+      divisionId: [],
     };
 
     if (name.length == 0) {
-        newErrorBags.name.push('Nama lengkap harus diisi.');
+      newErrorBags.name.push('Nama lengkap harus diisi.');
     }
 
-    if (!age) {
-        newErrorBags.age.push('Umur lengkap harus diisi.');
-    } else if (age === '0') {
-        newErrorBags.age.push('Umur tidak boleh nol.');
+    if (phone.length == 0) {
+      newErrorBags.phone.push('Nomor telepon harus diisi.');
+    } else if (isNaN(phone)) {
+      newErrorBags.phone.push('Nomor telepon harus berupa angka.');
+    } else if (phone.length < 5) {
+      newErrorBags.phone.push('Nomor telepon harus berjumlah minimal 5 digit.');
     }
-
-    if (address.length == 0) {
-        newErrorBags.address.push('Alamat lengkap harus diisi.');
+    if (position.length == 0) {
+      newErrorBags.position.push('Posisi harus diisi.');
+    }
+    if (divisionId.length == 0) {
+      newErrorBags.divisionId.push('Divisi harus diisi.');
     }
 
     setErrorBags(newErrorBags);
-  },[name, age, address]);
-
+  },[name, phone, divisionId, position, image]);
+  
   return (
     <Layout>
       <div className="max-w-4xl px-4 py-10 sm:px-6 lg:px-8 mx-auto">
       <div className="bg-white rounded-xl shadow p-4 sm:p-7 dark:bg-neutral-800">
         <div className="mb-8">
           <h2 className="text-xl font-bold text-gray-800 dark:text-neutral-200">
-            Ubah User
+            Ubah Karyawan
           </h2>
           <p className="text-sm text-gray-600 dark:text-neutral-400">
-            Dapat memperbarui data user disini.
+            Dapat memperbarui karyawan disini.
           </p>
         </div>
     
@@ -121,37 +139,80 @@ const EditUserPage = ({  }) => {
             </div>
 
             <div className="sm:col-span-3">
-              <label htmlFor="age" className="inline-block text-sm text-gray-800 mt-2.5 dark:text-neutral-200">
-                Umur
+              <label htmlFor="phone" className="inline-block text-sm text-gray-800 mt-2.5 dark:text-neutral-200">
+                Nomor Telepon
               </label>
             </div>
     
             <div className="sm:col-span-9">
-              <input value={age} onChange={(e) => setAge(e.target.value)} id="age" type="number" className="py-2 px-3 block border w-full border-gray-300 text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="Masukkan nama lengkap"/>
-              {errorBags.age.length > 0 && (
-                <p className="text-xs text-red-600 mt-2" id="age-error">{errorBags.age[0]}</p>
+              <input value={phone} onChange={(e) => setPhone(e.target.value)} id="phone" type="text" className="py-2 px-3 block border w-full border-gray-300 text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="Masukkan nomor telepon"/>
+              {errorBags.phone.length > 0 && (
+                <p className="text-xs text-red-600 mt-2" id="phone-error">{errorBags.phone[0]}</p>
               )}
             </div>
 
             <div className="sm:col-span-3">
-              <label htmlFor="address" className="inline-block text-sm text-gray-800 mt-2.5 dark:text-neutral-200">
-                Alamat
+              <label htmlFor="position" className="inline-block text-sm text-gray-800 mt-2.5 dark:text-neutral-200">
+                Posisi
               </label>
             </div>
     
             <div className="sm:col-span-9">
-              <input value={address} onChange={(e) => setAddress(e.target.value)} id="address" type="text" className="py-2 px-3 block border w-full border-gray-300 text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="Masukkan nama lengkap"/>
-              {errorBags.address.length > 0 && (
-                <p className="text-xs text-red-600 mt-2" id="address-error">{errorBags.address[0]}</p>
+              <input value={position} onChange={(e) => setPosition(e.target.value)} id="position" type="text" className="py-2 px-3 block border w-full border-gray-300 text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="Masukkan nama lengkap"/>
+              {errorBags.position.length > 0 && (
+                <p className="text-xs text-red-600 mt-2" id="position-error">{errorBags.position[0]}</p>
+              )}
+            </div>
+
+            <div className="sm:col-span-3">
+              <label htmlFor="position" className="inline-block text-sm text-gray-800 mt-2.5 dark:text-neutral-200">
+                Divisi
+              </label>
+            </div>
+    
+            <div className="sm:col-span-9">
+              <select id="position" value={divisionId} onChange={(e) => setDivisionId(e.target.value)} className="py-3 px-4 pe-9 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600">
+                <option value="">Pilih divisi</option>
+                {divisions.map((division, i) => (
+                  <option key={i} value={division.id}>{division.name}</option>
+                ))}
+              </select>
+              {errorBags.divisionId.length > 0 && (
+                <p className="text-xs text-red-600 mt-2" id="position-error">{errorBags.divisionId[0]}</p>
+              )}
+            </div>
+
+            <div className="sm:col-span-3">
+              <label htmlFor="image" className="inline-block text-sm text-gray-800 mt-2.5 dark:text-neutral-200">
+                Gambar
+              </label>
+            </div>
+    
+            <div className="sm:col-span-9">
+            <div className="max-w-sm">
+              <label htmlFor="image" className="sr-only">Pilih file</label>
+              <div className="flex gap-2 items-center">
+                <input onChange={(e) => setImage(e.target.files[0])} type="file" name="image" id="image" className="block w-full border border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400
+                  file:bg-gray-50 file:border-0
+                  file:me-4
+                  file:py-3 file:px-4
+                  dark:file:bg-neutral-700 dark:file:text-neutral-400"/>
+                  {!image && (
+                    <img src={`${import.meta.env.VITE_BACKEND_URL}/storage/${extistingImage}`} alt="" className="h-10" />
+                  )}
+              </div>
+            </div>
+              {errorBags.image.length > 0 && (
+                <p className="text-xs text-red-600 mt-2" id="image-error">{errorBags.image[0]}</p>
               )}
             </div>
           </div>
     
           <div className="mt-5 flex justify-end gap-x-2">
-            <Link to={'/'} className="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
+            <Link to={'/employee'} className="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
               Kembali
             </Link>
-            <button onClick={update} disabled={(errorBags.name.length > 0 || errorBags.age.length > 0 || errorBags.address.length > 0)} className="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+            <button onClick={addEmployee} disabled={(errorBags.name.length > 0 || errorBags.phone.length > 0 || errorBags.position.length > 0 || errorBags.divisionId.length > 0 || errorBags.image.length > 0)} className="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
               Simpan
             </button>
           </div>
@@ -161,4 +222,4 @@ const EditUserPage = ({  }) => {
     </Layout>
   );
 }
-export default EditUserPage;
+export default EditEmployeePage;

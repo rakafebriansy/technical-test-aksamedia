@@ -1,11 +1,11 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Layout from "../../components/Layout";
 import { DarkMode } from "../../contexts/DarkModeContext";
 import { DivisionService } from "../../services/divisionService";
 import { EmployeeService } from "../../services/employeeService";
 
-const AddUserPage = ({  }) => {
+const AddEmployeePage = ({  }) => {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [position, setPosition] = useState('');
@@ -43,8 +43,8 @@ const AddUserPage = ({  }) => {
 
       Swal.fire({
           icon: "success",
-          title: "Tambah User Berhasil",
-          text: "Berhasil menambahkan user!",
+          title: "Tambah Karyawan Berhasil",
+          text: "Berhasil menambahkan karyawan!",
           customClass: {
             popup: isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-black',
             button: 'bg-blue-500 text-white hover:bg-blue-700',
@@ -53,8 +53,8 @@ const AddUserPage = ({  }) => {
     } catch (e) {
       Swal.fire({
           icon: "error",
-          title: "Tambah User Gagal",
-          text: "Gagal menambahkan user!",
+          title: "Tambah Karyawan Gagal",
+          text: "Gagal menambahkan karyawan!",
           customClass: {
             popup: isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-black',
             button: 'bg-blue-500 text-white hover:bg-blue-700',
@@ -112,10 +112,10 @@ const AddUserPage = ({  }) => {
       <div className="bg-white rounded-xl shadow p-4 sm:p-7 dark:bg-neutral-800">
         <div className="mb-8">
           <h2 className="text-xl font-bold text-gray-800 dark:text-neutral-200">
-            Tambah User
+            Tambah Karyawan
           </h2>
           <p className="text-sm text-gray-600 dark:text-neutral-400">
-            Dapat menambah user baru disini.
+            Dapat menambah karyawan baru disini.
           </p>
         </div>
     
@@ -213,4 +213,4 @@ const AddUserPage = ({  }) => {
     </Layout>
   );
 }
-export default AddUserPage;
+export default AddEmployeePage;
