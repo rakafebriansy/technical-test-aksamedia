@@ -74,6 +74,15 @@ const HomePage = ({  }) => {
             UserService.removeUser(id);
             const userRecords = UserService.getUsers();
             setUsers(userRecords);
+            Swal.fire({
+                icon: "success",
+                title: "Ubah User Berhasil",
+                text: "Berhasil memperbarui user!",
+                customClass: {
+                  popup: isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-black',
+                  button: 'bg-blue-500 text-white hover:bg-blue-700',
+                },
+            });
         }
     }
 
