@@ -52,6 +52,24 @@ class EmployeeController extends Controller
             ], 500);
         }
     }
+
+    public function show($id): JsonResponse
+    {
+        try {
+            $employee = Employee::where('id',$id)->with('division')->first();
+            return response()->json([
+                "status" => "success",
+                "message" => "Berhasil mendapatkan data karyawan.",
+                "data" => $employee,
+            ], 200);
+        } catch (\Exception $error) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Internal server error.',
+                'error' => $error->getMessage(),
+            ], 500);
+        }
+    }
     
     public function store(Request $request): JsonResponse
     {
@@ -100,6 +118,7 @@ class EmployeeController extends Controller
     public function update($id,Request $request): JsonResponse
     {
         try {
+
             $validated = $request->validate([
                 'image' => 'nullable',
                 'name' => 'nullable',

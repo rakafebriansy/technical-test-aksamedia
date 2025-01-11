@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
@@ -60,6 +61,49 @@ class AuthController extends Controller
                 'status' => 'success',
                 'message' => 'Berhasil logout.',
             ],200);
+        } catch (\Exception $error) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Internal server error.',
+                'error' => $error->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function updateName($id,Request $request): JsonResponse
+    {
+        try {
+            Log::info($request->all());
+            $validated = $request->validate([
+                'name' => 'required',
+                'password' => 'required'
+            ]);
+
+            $user = User::where('id','=',$id)->first();
+            if(!Hash::check($validated['password'],$user->password)) {
+                throw new \Exception('Credential is invalid.');
+            }
+            
+            $user->name = $validated['name'];
+            $updated = $user->save();
+
+            Log::info($updated);
+
+            if(!$updated) {
+                throw new \Exception('User is not found.');
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $user,
+                'message' => 'Berhasil memperbarui nama.',
+            ],200);
+        } catch (ValidationException $error) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Validasi gagal.',
+                'errors' => $error->errors(),
+            ], 422);
         } catch (\Exception $error) {
             return response()->json([
                 'status' => 'error',

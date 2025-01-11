@@ -13,9 +13,12 @@ Route::get('/user', function (Request $request) {
 
 Route::post('/login', [AuthController::class,'login']);
 Route::group(['middleware' => 'auth:sanctum'],function() {
+    Route::patch('/user/{id}', [AuthController::class,'updateName']);
+
     Route::get('/divisions', [DivisionController::class,'index']);
     Route::get('/divisions/all', [DivisionController::class,'all']);
     Route::get('/employees', [EmployeeController::class,'index']);
+    Route::get('/employees/{id}', [EmployeeController::class,'show']);
     Route::post('/employees', [EmployeeController::class,'store']);
     Route::put('/employees/{id}', [EmployeeController::class,'update']);
     Route::delete('/employees/{id}', [EmployeeController::class,'remove']);
