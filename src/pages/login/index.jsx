@@ -77,6 +77,9 @@ const LoginPage = ({  }) => {
                             <p className="mt-2 text-sm text-gray-600 dark:text-neutral-400">
                                 Silahkan isi dengan kredensial milik anda.
                             </p>
+                            <p className="text-sm text-gray-600 dark:text-neutral-400">
+                                username: rakaa, pw: 123456
+                            </p>
                             <img src="/src/assets/login-banner.webp" className="w-[30%] rounded-sm" alt="" />
                         </div>
 
