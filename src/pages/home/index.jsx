@@ -110,7 +110,7 @@ const HomePage = ({  }) => {
         <Layout>
             <div className="mt-8 justify-center flex">
                 <div className="flex flex-col">
-                    <div className="-m-1.5 overflow-x-auto md:min-w-[40rem] w-[20rem]">
+                    <div className="-m-1.5 overflow-x-auto md:w-fit w-[20rem]">
                         <div className="mb-3">
                             <h1 className="font-semibold dark:text-neutral-200">User Table</h1>
                         </div>
